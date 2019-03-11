@@ -2,13 +2,16 @@ sparseutils
 -----------
 
 A collection of utilities for interacting with sparse files.
+Modification to allow creating ddrescue domain mapfiles based
+on the structure of a sparse image file. Rehosted on GitHub as
+the original author took down his git repositories.
 
 Installation
 ------------
 
 You can install sparseutils with pip,
 
-    % sudo pip3 install sparseutils
+    % sudo pip3 install https://github.com/Googulator/sparseutils
 
 alternatively you can clone the [source]
 and then run pip from within the git repo:
@@ -22,12 +25,8 @@ you can also run the tests from within the git repo using tox:
 Contributing
 ------------
 
-To report an issue you can email me, please see the git log for the address.
+To report an issue, please use the Issues page on this repository.
 
-Patches welcome! To prepare a patch series:
+Patches welcome! Pull requests preferred.
 
-    % git format-patch --cover-letter -o patch -M origin/master
-    % $EDITOR patch/0000-cover-letter.patch
-    % git send-email patch
-
-[source]: http://git.gitano.org.uk/personal/richardipsum/sparseutils.git
+[source]: https://github.com/Googulator/sparseutils
