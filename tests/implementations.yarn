@@ -1,0 +1,28 @@
+    IMPLEMENTS GIVEN a sparse file (\S+) with a hole size (\d+) and data size (\d+) with spec ([a-zA-z,]+)
+    set -e -o pipefail
+    echo "$MATCH_4" | mksparse "$DATADIR/$MATCH_1" --hole-size "$MATCH_2" --data-size "$MATCH_3"
+
+    IMPLEMENTS WHEN we run sparsemap on (\w+)
+    run_sparsemap "$DATADIR/$MATCH_1"
+
+    IMPLEMENTS WHEN we attempt to run (\w+) without any arguments
+    set +e
+    eval run_$MATCH_1
+    echo $? > "$DATADIR/EXITCODE"
+    set -e
+
+    IMPLEMENTS WHEN we attempt to run (\w+) (?:on|with) (.+)
+    set +e
+    eval run_$MATCH_1 "$DATADIR/$MATCH_2"
+    echo $? > "$DATADIR/EXITCODE"
+    set -e
+
+    IMPLEMENTS THEN the exit code is (\d+)
+    exit_code=$(cat "$DATADIR/EXITCODE")
+    [[ $exit_code -eq $MATCH_1 ]]
+
+    IMPLEMENTS THEN stderr contains '(.+)'
+    grep -i "$MATCH_1" "$DATADIR/STDERR"
+
+    IMPLEMENTS THEN stdout contains exactly (.+)
+    diff -u <(echo -e "$MATCH_1") "$DATADIR/STDOUT"

@@ -1,0 +1,4 @@
+[console_scripts]
+mksparse = sparseutils.mksparse:main
+sparsemap = sparseutils.sparsemap:main
+

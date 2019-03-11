@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -e
+set -u
+
+# psst: --snapshot is your friend if you're debugging the tests
+
+run_yarn_suite() {
+    PATH="$(realpath $(dirname check)):$PATH" yarn tests/*.yarn \
+        --stop-on-first-fail -s tests/shell_lib --shell='/bin/bash' "$@"
+}
+
+run_yarn_suite "$@"

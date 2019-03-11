@@ -1,0 +1,75 @@
+sparsemap tests
+===============
+
+Please note that these tests will depend very much on the file
+system, it is up to the file system to decide how many zeroes
+are required before it decides to represent the hole as an actual
+hole rather than just a run of zeroes.
+
+At time of writing (2017) these tests pass on ext4,
+where the default block size is 4096 bytes.
+
+    SCENARIO sparsemap single data followed by single hole
+       GIVEN a sparse file S with a hole size 4096 and data size 8192 with spec data,hole
+        WHEN we run sparsemap on S
+        THEN stdout contains exactly DATA 8192\nHOLE 4096
+
+    SCENARIO sparsemap single hole followed by single data
+       GIVEN a sparse file S with a hole size 4096 and data size 8192 with spec hole,data
+        WHEN we run sparsemap on S
+        THEN stdout contains exactly HOLE 4096\nDATA 8192
+
+    SCENARIO sparsemap hole followed by data followed by hole
+       GIVEN a sparse file S with a hole size 8192 and data size 4096 with spec hole,data,hole
+        WHEN we run sparsemap on S
+        THEN stdout contains exactly HOLE 8192\nDATA 4096\nHOLE 8192
+
+    SCENARIO tiny hole can look like data
+       GIVEN a sparse file S with a hole size 6 and data size 4096 with spec hole,data,hole
+        WHEN we run sparsemap on S
+        THEN stdout contains exactly DATA 4108
+
+    SCENARIO sparsemap data followed by hole followed by data
+       GIVEN a sparse file S with a hole size 8192 and data size 4096 with spec data,hole,data
+        WHEN we run sparsemap on S
+        THEN stdout contains exactly DATA 4096\nHOLE 8192\nDATA 4096
+
+    SCENARIO sparsemap sequence of holes
+       GIVEN a sparse file S with a hole size 4096 and data size 8192 with spec data,hole,hole,data
+        WHEN we run sparsemap on S
+        THEN stdout contains exactly DATA 8192\nHOLE 8192\nDATA 8192
+
+    SCENARIO sparsemap sequence of holes (ending with hole)
+       GIVEN a sparse file S with a hole size 8192 and data size 4096 with spec data,hole,hole,hole
+        WHEN we run sparsemap on S
+        THEN stdout contains exactly DATA 4096\nHOLE 24576
+
+    SCENARIO sparsemap file with only data
+       GIVEN a sparse file S with a hole size 8192 and data size 4096 with spec data
+        WHEN we run sparsemap on S
+        THEN stdout contains exactly DATA 4096
+
+    SCENARIO sparsemap file with only hole
+       GIVEN a sparse file S with a hole size 8192 and data size 4096 with spec hole
+        WHEN we run sparsemap on S
+        THEN stdout contains exactly HOLE 8192
+
+    SCENARIO sparsemap file with data,hole,data,hole,data
+       GIVEN a sparse file S with a hole size 8192 and data size 4096 with spec data,hole,data,hole,data
+        WHEN we run sparsemap on S
+        THEN stdout contains exactly DATA 4096\nHOLE 8192\nDATA 4096\nHOLE 8192\nDATA 4096
+
+    SCENARIO sparsemap file with hole,data,hole,data,hole
+       GIVEN a sparse file S with a hole size 8192 and data size 4096 with spec hole,data,hole,data,hole
+        WHEN we run sparsemap on S
+        THEN stdout contains exactly HOLE 8192\nDATA 4096\nHOLE 8192\nDATA 4096\nHOLE 8192
+
+Generic commandline handling stuff,
+
+    SCENARIO sparsemap errs on no FILE arg
+        WHEN we attempt to run sparsemap without any arguments
+        THEN the exit code is 2
+
+    SCENARIO sparsemap errs if more than one arg
+        WHEN we attempt to run sparsemap on S T
+        THEN the exit code is 2

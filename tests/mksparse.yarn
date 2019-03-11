@@ -1,0 +1,17 @@
+mksparse tests
+==============
+
+mksparse is mostly tested by the sparsemap tests, but these yarns
+will just make sure that basic command line handling is working.
+
+    SCENARIO error if no output file
+        WHEN we attempt to run mksparse without any arguments
+        THEN the exit code is 2
+
+    SCENARIO error if more than one output file
+        WHEN we attempt to run mksparse with S T
+        THEN the exit code is 2
+
+    SCENARIO error if bad options
+        WHEN we attempt to run mksparse with --explode-kittens S
+        THEN the exit code is 2
